@@ -9,8 +9,14 @@ int main() {
 	do{
 		int n;
 
-		cout << "Introduce cuantas iteraciones de la serie de Fibonacci quieres hacer: ";
-		cin >> n;
+        cout << "Introduce cuantas iteraciones de la serie de Fibonacci quieres hacer entre [0/46]: ";
+
+        do {
+            cin >> n;
+            if (n < 0 || n > 46) {
+                cout << "Numero de iteracion invalido, vuelve a introducirlo: ";
+            }
+        } while (n < 0 || n > 46);
 
 		long result;
 		auto tInic = clock();
