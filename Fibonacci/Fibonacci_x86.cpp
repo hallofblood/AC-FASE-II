@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <chrono>
 
 using namespace std;
 
@@ -18,8 +19,9 @@ int main() {
             }
         } while (n < 0 || n > 46);
 
+
 		long result;
-		auto tInic = clock();
+		auto tInic = std::chrono::high_resolution_clock::now();
         __asm {
             mov ecx, n; carga n en ecx
             mov eax, 1; F0 = 1
@@ -43,9 +45,12 @@ int main() {
                 mov result, eax; guarda el resultado en la variable result
         }
 
-		auto tEnd = clock();
+		auto tEnd = std::chrono::high_resolution_clock::now();
 
-		cout << (tEnd - tInic)*1000 << ", " << result << endl;
+        auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(tEnd - tInic);
+
+        cout << endl << "Restultado de la serie de Fibonacci con " << n << " iteraciones: " << result << endl;
+        cout << "Tiempo de ejecución: " << time.count() << " nanosegundos" << endl << endl;
 
 		cout << "Indica si quieres realizar otro calculo(s/n): ";
 
