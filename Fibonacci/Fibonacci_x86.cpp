@@ -50,7 +50,7 @@ int main() {
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(tEnd - tInic);
 
         cout << endl << "Restultado de la serie de Fibonacci con " << n << " iteraciones: " << result << endl;
-        cout << "Tiempo de ejecución: " << time.count() << " nanosegundos" << endl << endl;
+        cout << "Tiempo de ejecucion: " << time.count() << " nanosegundos" << endl << endl;
 
 		cout << "Indica si quieres realizar otro calculo(s/n): ";
 
