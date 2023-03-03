@@ -1,5 +1,6 @@
 #include <iostream>
-#include <time.h>
+#include <ctime>
+#include <chrono>
 using namespace std;
 int main() {
 	char opcion;
@@ -7,37 +8,39 @@ int main() {
 		long long iteracionActual = 0;		//Almacena el valor en la primera iteracion con el valor anterior
 		long long siguiente = 1;				//Almacena el valor de la siguiente operacion de sumar los valores n + (n-1)
 		long long aux;					//Auxiliar para intercambiar los valores de iteración actual y siguiente
-		long long iteraciones;		//Iteraciones a realizar
-		clock_t tiempoInicial = 0;	//Almaceno el tiempo inicial antes de ejecutar el algoritmo
-		clock_t tiempoFinal = 0;		//Almacenan el tiempo final de ejecutar mi algoritmo
-		
+		int iteraciones;		//Iteraciones a realizar
+		int numIteraciones;
 		//Compruebo si el numero de iteraciones es valido
 		bool valido = false;	
-		while (valido == false) {
-			cout << "Introduce cuantas iteraciones de la serie de fibonacci quieres realizar: ";
+		cout << "Introduce cuantas iteraciones de la serie de Fibonacci quieres hacer [0/46]: ";
+		do {
 			cin >> iteraciones;
-			if (iteraciones <= 0) {
-				cout << "Numero de iteraciones no valido" << endl;
+			if (iteraciones < 0 || iteraciones > 46) {
+				cout << "Numero de iteracion invalido, vuelve a introducirlo: ";
 			}
-			else {
-				valido = true;
-			}
-		}
+		} while (iteraciones < 0 || iteraciones > 46);
 
+		cout << "\n";
+		numIteraciones = iteraciones;
 		//Bucle que realiza la serie de fibonacci
-		tiempoInicial = clock();
+		auto tiempoInicial = std::chrono::high_resolution_clock::now();
 		while (iteraciones > 0) {
 			aux = siguiente;
 			siguiente = iteracionActual + siguiente;
 			iteracionActual = aux;
 			iteraciones--;
 		}
-		tiempoFinal = clock();
-
-		cout << iteracionActual <<endl;
-		cout << 1000.0 * (tiempoFinal - tiempoInicial)/CLOCKS_PER_SEC << endl;
-		cout << "Quiere continuar? (s/n): ";
-		cin >> opcion;
+		auto tiempoFinal = std::chrono::high_resolution_clock::now();
+		cout << "Resultado de la serie de Fibonacci con "<<numIteraciones<<" iteraciones: " << iteracionActual << endl;
+		auto duracion = std::chrono::duration_cast<std::chrono::nanoseconds>(tiempoFinal - tiempoInicial);
+		cout <<"Tiempo de ejecucion: " << duracion.count() <<" nanosegundos" << endl<<endl;
+		do {
+			cout << "Indica si quieres realizar otro calculo(s/n): ";
+			cin >> opcion;
+			if (opcion != 'n' && opcion != 's') {
+				cout << "Opcion no valida" << endl;
+			}
+		} while (opcion != 'n' && opcion != 's');
 	} while (opcion != 'n');
 	return 0;
 }
