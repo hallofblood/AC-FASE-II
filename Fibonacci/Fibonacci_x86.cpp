@@ -52,9 +52,16 @@ int main() {
         cout << endl << "Restultado de la serie de Fibonacci con " << n << " iteraciones: " << result << endl;
         cout << "Tiempo de ejecucion: " << time.count() << " nanosegundos" << endl << endl;
 
-		cout << "Indica si quieres realizar otro calculo(s/n): ";
+        cout << "Indica si quieres realizar otro calculo(s/n): ";
 
-		cin >> otra;
+        do {
+            cin >> otra;
+
+            if (otra != 's' && otra != 'n') {
+                cout << "Opcion no valida, vuelve a introducirlo: ";
+            }
+
+        } while (otra != 's' && otra != 'n');
 
 	}while(otra != 'n');
 
