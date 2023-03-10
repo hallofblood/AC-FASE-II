@@ -5,13 +5,13 @@ using namespace std;
 int main() {
 	char opcion;
 	do {
-		long long iteracionActual = 0;		//Almacena el valor en la primera iteracion con el valor anterior
-		long long siguiente = 1;				//Almacena el valor de la siguiente operacion de sumar los valores n + (n-1)
-		long long aux;					//Auxiliar para intercambiar los valores de iteración actual y siguiente
+		int iteracionActual = 0;		//Almacena el valor en la primera iteracion con el valor anterior
+		int siguiente = 1;				//Almacena el valor de la siguiente operacion de sumar los valores n + (n-1)
+		int aux;					//Auxiliar para intercambiar los valores de iteración actual y siguiente
 		int iteraciones;		//Iteraciones a realizar
 		int numIteraciones;
+
 		//Compruebo si el numero de iteraciones es valido
-		bool valido = false;	
 		cout << "Introduce cuantas iteraciones de la serie de Fibonacci quieres hacer [0/46]: ";
 		do {
 			cin >> iteraciones;
