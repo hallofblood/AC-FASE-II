@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Fibonacci_SSE.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
     <ClCompile Include="Fibonacci.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
