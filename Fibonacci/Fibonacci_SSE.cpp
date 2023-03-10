@@ -40,7 +40,7 @@ int main() {
 
             //load the initial values into XMM0 and XMM1 registers
 
-            movd xmm0, edx; move from ecx to xmm0
+            movd xmm0, edx; move from edx to xmm0
             
             // generate the remaining Fibonacci numbers
             bucle:
