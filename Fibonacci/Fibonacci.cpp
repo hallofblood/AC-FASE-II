@@ -100,7 +100,7 @@ void fibonacci_SSE(int fibonacciValue) {
 			cmp ecx, 0; compare counter with zero
 			jne bucle; if not zero, loop again
 
-			//exit program
+			// Exit program
 			done :
 				movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
 				emms; clear MMX registers
