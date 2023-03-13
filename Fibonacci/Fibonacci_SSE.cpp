@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main() {
+int SSE() {
 	char option;
 	do{
 		int fibonacciValue;
