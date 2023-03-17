@@ -140,7 +140,7 @@ int main() {
 		do {
 			cin >> fibonacciValue;
 			if (fibonacciValue < 0 || fibonacciValue > 24) {
-				cout << "Numero de iteraciones invalida, vuelve a introducirlo: ";
+				cout << "Numero de iteraciones invalido, vuelve a introducirlo: ";
 			}
 		} while (fibonacciValue < 0 || fibonacciValue > 24);
 
