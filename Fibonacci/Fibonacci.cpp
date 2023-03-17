@@ -115,10 +115,9 @@ void fibonacci_SSE(int fibonacciValue) {
 
 
 int main() {
-	char seguir;
+	int benchmarkOption;
+	char repeatBenchmark;
 
-
-	int opc;
 	cout << "Bienvenido a la calculadora de Fibonacci.\n"
 		<< "1. Fibonacci en C++ \n"
 		<< "2. Fibonacci en x86 \n"
@@ -126,14 +125,13 @@ int main() {
 		<< "4. Las tres versiones \n"
 		<< "Seleccione una opcion: ";
 	do {
-		cin >> opc;
+		cin >> benchmarkOption;
 
-		if (opc < 1 || opc > 4) {
+		if (benchmarkOption < 1 || benchmarkOption > 4) {
 			cout << "Opcion no valida, vuelve a introducirla: ";
 		}
 
-	} while (opc < 1 || opc > 4);
-	char option;
+	} while (benchmarkOption < 1 || benchmarkOption > 4);
 	do {
 		int fibonacciValue;
 
@@ -147,7 +145,7 @@ int main() {
 		} while (fibonacciValue < 0 || fibonacciValue > 24);
 
 
-		switch (opc) {
+		switch (benchmarkOption) {
 		case 1:
 			fibonacci_C(fibonacciValue);
 			break;
@@ -166,18 +164,18 @@ int main() {
 			break;
 		}
 
-		cout << "Indique si quiere probar otra forma(s/n): ";
+		cout << "Indique si quiere probar con otro valor (s/n): ";
 
 		do {
-			cin >> seguir;
+			cin >> repeatBenchmark;
 
-			if (seguir != 's' && seguir != 'n') {
+			if (repeatBenchmark != 's' && repeatBenchmark != 'n') {
 				cout << "Opcion no valida, vuelve a introducirla: ";
 			}
 
-		} while (seguir != 's' && seguir != 'n');
+		} while (repeatBenchmark != 's' && repeatBenchmark != 'n');
 
-	} while (seguir != 'n');
+	} while (repeatBenchmark != 'n');
 
 	return 0;
 }
