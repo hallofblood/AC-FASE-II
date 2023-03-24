@@ -5,14 +5,14 @@
 
 using namespace std;
 
-void printResults(string language, int fibonacciValue, long fibonacciResult, double totalTime) {
+void printResults(string language, int fibonacciValue, long fibonacciResult, chrono::nanoseconds totalTime) {
 	cout << "Resultado de la serie de Fibonacci de " << fibonacciValue
 		<< " iteraciones, utilizando el benchmark creado con " << language << ":\n" << fibonacciResult << endl
 		<< "Tiempo de ejecucion (en nanosegundos): \n"
-		<< totalTime << endl << endl;
+		<< totalTime.count() << endl << endl;
 }
 
-double fibonacci_C(int fibonacciValue) {
+void fibonacci_C(int fibonacciValue) {
 	int fibonacciResult_C = 0;		// Stores the resulting value from previous iteration
 	int nextValue = 1;				// Stores the next value
 	int currentValue;				// Stores the current value
@@ -21,52 +21,52 @@ double fibonacci_C(int fibonacciValue) {
 	cout << "\n";
 	sequenceValue = fibonacciValue;
 	//Bucle que realiza la serie de fibonacci
-	std::chrono::high_resolution_clock::time_point startTime_C = std::chrono::high_resolution_clock::now();
+	auto startTime = std::chrono::high_resolution_clock::now();
 	while (sequenceValue > 0) {
 		currentValue = nextValue;
 		nextValue = fibonacciResult_C + nextValue;
 		fibonacciResult_C = currentValue;
 		sequenceValue--;
 	}
-	std::chrono::high_resolution_clock::time_point endTime_C = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> totalTime_C = std::chrono::duration_cast<std::chrono::duration<double>>(endTime_C - startTime_C);
-	return (totalTime_C.count());
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
+	printResults("C++", fibonacciValue, fibonacciResult_C, totalTime);
 }
 
-double fibonacci_x86(int fibonacciValue) {
+void fibonacci_x86(int fibonacciValue) {
 	long fibonacciResult_x86;
-	chrono::high_resolution_clock::time_point startTime_x86 = chrono::high_resolution_clock::now();
+	auto startTime = chrono::high_resolution_clock::now();
 	__asm {
 		mov ecx, fibonacciValue; number of Fibonacci numbers to generate
-		mov eax, 1							//current Fibonacci number
+		mov eax, 1; current Fibonacci number
 
-		cmp ecx, 1
-		je done								//ends program when fibonacciValue equals 1
+		cmp ecx, 1;
+		je done; ends program when fibonacciValue equals 1
 
-		mov eax, 0
+			mov eax, 0;
 
-		cmp ecx, 0
-		je done								//ends program when fibonacciValue equals 0
-				
-		mov ebx, 1							//next fibonacciValue
+		cmp ecx, 0;
+		je done; ends program when fibonacciValue equals 0
 
-		loop_start :
-			add eax, ebx					//F_n = F_(n - 1) + F_(n - 2)
-			xchg eax, ebx					//swap currentand next Fibonacci numbers
-			loop loop_start					//if not 0, loop again
+			mov ebx, 1; next fibonacciValue
 
-		done:
-			mov fibonacciResult_x86, eax	//stores the Fibonacci result
+			loop_start :
+		add eax, ebx; F_n = F_(n - 1) + F_(n - 2)
+			xchg eax, ebx; swap currentand next Fibonacci numbers
+			loop loop_start; if not 0, loop again
+
+			done :
+		mov fibonacciResult_x86, eax; stores the Fibonacci result
 	}
 
-	chrono::high_resolution_clock::time_point endTime_x86 = chrono::high_resolution_clock::now();
+	auto endTime = chrono::high_resolution_clock::now();
 
-	chrono::duration<double> totalTime_x86 = chrono::duration_cast<chrono::duration<double>>(endTime_x86 - startTime_x86);
-	return (totalTime_x86.count());
+	auto totalTime = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime);
+	printResults("x86", fibonacciValue, fibonacciResult_x86, totalTime);
 }
 
 double fibonacci_SSE(int fibonacciValue) {
-	
+
 	/*
 	float t1 = 0, t2 = 1, nextTerm = 0;
 	float* t1Aux;
@@ -86,10 +86,8 @@ double fibonacci_SSE(int fibonacciValue) {
 				movss xmm0, [esi]
 				movss xmm1, [edi]
 				movss xmm2, [ebx]
-
 				addss xmm2, xmm0
 				addss xmm2, xmm1
-
 				movss t1, xmm1
 				movss t2, xmm2
 			}
@@ -97,10 +95,10 @@ double fibonacci_SSE(int fibonacciValue) {
 	}
 	*/
 
-	
+
 	std::chrono::high_resolution_clock::time_point startTime_SSE = std::chrono::high_resolution_clock::now();
 	long fibonacciResult_SSE;
-	auto startTime = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < 100000; i++) {
 
 		__asm {
 			// set up the initial values of the Fibonacci sequence
@@ -123,10 +121,10 @@ double fibonacci_SSE(int fibonacciValue) {
 
 				// generate the remaining Fibonacci numbers
 				bucle :
-				paddw xmm0, xmm1; calculate the next Fibonacci number
+			paddw xmm0, xmm1; calculate the next Fibonacci number
 				movd ebx, xmm0; move from xmm1 to eax, to get the next value
 				movd edx, xmm1; move from xmm0 to edx, to get the current value
-				xchg edx, ebx; swap current and next Fibonacci numbers
+				xchg edx, ebx; swap currentand next Fibonacci numbers
 				movd xmm0, ebx; move from eax to xmm1, to update the next value
 				movd xmm1, edx; move from eax to xmm1, to update the next value
 				sub ecx, 1; decrement counter
@@ -135,15 +133,15 @@ double fibonacci_SSE(int fibonacciValue) {
 
 				// Exit program
 				done :
-					movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
-					emms; clear MMX registers
+			movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
+				emms; clear MMX registers
 		}
 	}
-	
 
-	auto endTime = std::chrono::high_resolution_clock::now();
 
-	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
+	std::chrono::high_resolution_clock::time_point endTime_SSE = std::chrono::high_resolution_clock::now();
+
+	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>((endTime_SSE - startTime_SSE) / 100000);
 	printResults("SSE", fibonacciValue, fibonacciResult_SSE, totalTime);
 }
 
@@ -151,9 +149,6 @@ double fibonacci_SSE(int fibonacciValue) {
 int main() {
 	int benchmarkOption;
 	char repeatBenchmark;
-	double* result_C;
-	double* result_x86;
-	double* result_SSE;
 
 	cout << "Bienvenido a la calculadora de Fibonacci.\n"
 		<< "1. Fibonacci en C++ \n"
@@ -184,34 +179,20 @@ int main() {
 
 		switch (benchmarkOption) {
 		case 1:
-			*result_C = fibonacci_C(fibonacciValue);
-			printResults("C++", fibonacciValue, 8, *result_C);
-			delete result_C;
+			fibonacci_C(fibonacciValue);
 			break;
 
 		case 2:
-			*result_x86 = fibonacci_x86(fibonacciValue);
-			printResults("x86", fibonacciValue, 8, *result_x86);
-			delete result_x86;
+			fibonacci_x86(fibonacciValue);
 			break;
 
 		case 3:
-			*result_SSE = fibonacci_SSE(fibonacciValue);
-			printResults("SSE", fibonacciValue, 8, *result_SSE);
-			delete result_SSE;
+			fibonacci_SSE(fibonacciValue);
 			break;
 		case 4:
-			*result_C = fibonacci_C(fibonacciValue);
-			printResults("C++", fibonacciValue, 8, *result_C);
-			delete result_C;
-
-			*result_x86 = fibonacci_x86(fibonacciValue);
-			printResults("x86", fibonacciValue, 8, *result_x86);
-			delete result_x86;
-
-			*result_SSE = fibonacci_SSE(fibonacciValue);
-			printResults("SSE", fibonacciValue, 8, *result_SSE);
-			delete result_SSE;
+			fibonacci_C(fibonacciValue);
+			fibonacci_x86(fibonacciValue);
+			fibonacci_SSE(fibonacciValue);
 			break;
 		}
 
