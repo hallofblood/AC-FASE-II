@@ -88,10 +88,8 @@ void fibonacci_SSE(int fibonacciValue) {
 				movss xmm0, [esi]
 				movss xmm1, [edi]
 				movss xmm2, [ebx]
-
 				addss xmm2, xmm0
 				addss xmm2, xmm1
-
 				movss t1, xmm1
 				movss t2, xmm2
 			}
@@ -140,8 +138,8 @@ void fibonacci_SSE(int fibonacciValue) {
 					emms; clear MMX registers
 		}
 	}
-	
-	
+
+
 	std::chrono::high_resolution_clock::time_point endTime_SSE = std::chrono::high_resolution_clock::now();
 
 	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime_SSE - startTime_SSE);
