@@ -90,7 +90,7 @@ void fibonacci_SSE(int fibonacciValue) {
 
 			// generate the remaining Fibonacci numbers
 			bucle :
-		paddw xmm0, xmm1; calculate the next Fibonacci number
+			paddw xmm0, xmm1; calculate the next Fibonacci number
 			movd ebx, xmm0; move from xmm1 to eax, to get the next value
 			movd edx, xmm1; move from xmm0 to edx, to get the current value
 			xchg edx, ebx; swap current and next Fibonacci numbers
