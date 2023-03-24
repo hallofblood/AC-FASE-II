@@ -13,8 +13,8 @@ void printResults(string language, int fibonacciValue, long fibonacciResult, chr
 }
 
 void fibonacci_C(int fibonacciValue) {
-	int fibonacciResult_C = 0;		// Stores the resulting value from previous iteration
-	int nextValue = 1;				// Stores the next value
+	int fibonacciResult_C;			// Stores the resulting value from previous iteration
+	int nextValue;					// Stores the next value
 	int currentValue;				// Stores the current value
 	int sequenceValue;				// Stores the number of Fibonacci numbers to generate
 
@@ -23,6 +23,8 @@ void fibonacci_C(int fibonacciValue) {
 	auto startTime = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 100000; i++) {
 		sequenceValue = fibonacciValue;
+		fibonacciResult_C = 0;
+		nextValue = 1;
 		while (sequenceValue > 0) {
 			currentValue = nextValue;
 			nextValue = fibonacciResult_C + nextValue;
