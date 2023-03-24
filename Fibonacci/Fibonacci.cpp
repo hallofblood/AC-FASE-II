@@ -66,51 +66,85 @@ double fibonacci_x86(int fibonacciValue) {
 }
 
 double fibonacci_SSE(int fibonacciValue) {
+	
+	/*
+	float t1 = 0, t2 = 1, nextTerm = 0;
+	float* t1Aux;
+	float* t2Aux;
+	float* nextTermAux;
+	t1Aux = &t1;
+	t2Aux = &t2;
+	nextTermAux = &nextTerm;
+	std::chrono::high_resolution_clock::time_point startTime_SSE = std::chrono::high_resolution_clock::now();
+	for (int j = 0; j < 100000; j++) {
+		float t1 = 0, t2 = 1, nextTerm = 0;
+		for (int i = 1; i <= fibonacciValue; i++) {
+			_asm {
+				mov esi, t1Aux
+				mov edi, t2Aux
+				mov ebx, nextTermAux
+				movss xmm0, [esi]
+				movss xmm1, [edi]
+				movss xmm2, [ebx]
+
+				addss xmm2, xmm0
+				addss xmm2, xmm1
+
+				movss t1, xmm1
+				movss t2, xmm2
+			}
+		}
+	}
+	*/
+
+	
+	std::chrono::high_resolution_clock::time_point startTime_SSE = std::chrono::high_resolution_clock::now();
 	long fibonacciResult_SSE;
-	chrono::high_resolution_clock::time_point startTime_SSE = std::chrono::high_resolution_clock::now();
+	auto startTime = std::chrono::high_resolution_clock::now();
 
-	__asm {
-		// set up the initial values of the Fibonacci sequence
-		mov ecx, fibonacciValue; number of Fibonacci numbers to generate
-		mov ebx, 0; current Fibonacci number
-		mov edx, 1; next Fibonacci number
+		__asm {
+			// set up the initial values of the Fibonacci sequence
+			mov ecx, fibonacciValue; number of Fibonacci numbers to generate
+			mov ebx, 0; current Fibonacci number
+			mov edx, 1; next Fibonacci number
 
-		movd xmm1, edx; move from edx to xmm1
-		cmp ecx, 1;
-		je done; ends program when fibonacciValue equals 1
+			movd xmm1, edx; move from edx to xmm1
+			cmp ecx, 1;
+			je done; ends program when fibonacciValue equals 1
 
-			movd xmm1, ebx; move from edx to xmm1
+				movd xmm1, ebx; move from edx to xmm1
 
-			cmp ecx, 0;
-		je done; ends program when fibonacciValue equals 0
+				cmp ecx, 0;
+			je done; ends program when fibonacciValue equals 0
 
-			//load the initial values into XMM0 and XMM1 registers
+				//load the initial values into XMM0 and XMM1 registers
 
-			movd xmm0, edx; move from ecx to xmm0
+				movd xmm0, edx; move from ecx to xmm0
 
-			// generate the remaining Fibonacci numbers
-			bucle :
-			paddw xmm0, xmm1; calculate the next Fibonacci number
-			movd ebx, xmm0; move from xmm1 to eax, to get the next value
-			movd edx, xmm1; move from xmm0 to edx, to get the current value
-			xchg edx, ebx; swap current and next Fibonacci numbers
-			movd xmm0, ebx; move from eax to xmm1, to update the next value
-			movd xmm1, edx; move from eax to xmm1, to update the next value
-			sub ecx, 1; decrement counter
-			cmp ecx, 0; compare counter with zero
-			jne bucle; if not zero, loop again
+				// generate the remaining Fibonacci numbers
+				bucle :
+				paddw xmm0, xmm1; calculate the next Fibonacci number
+				movd ebx, xmm0; move from xmm1 to eax, to get the next value
+				movd edx, xmm1; move from xmm0 to edx, to get the current value
+				xchg edx, ebx; swap current and next Fibonacci numbers
+				movd xmm0, ebx; move from eax to xmm1, to update the next value
+				movd xmm1, edx; move from eax to xmm1, to update the next value
+				sub ecx, 1; decrement counter
+				cmp ecx, 0; compare counter with zero
+				jne bucle; if not zero, loop again
 
-			// Exit program
-			done :
-				movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
-				emms; clear MMX registers
+				// Exit program
+				done :
+					movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
+					emms; clear MMX registers
+		}
 	}
 	
 
-	chrono::high_resolution_clock::time_point endTime_SSE = std::chrono::high_resolution_clock::now();
+	auto endTime = std::chrono::high_resolution_clock::now();
 
-	chrono::duration<double> totalTime_SSE = std::chrono::duration_cast<std::chrono::duration<double>>(endTime_SSE - startTime_SSE);
-	return (totalTime_SSE.count());
+	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
+	printResults("SSE", fibonacciValue, fibonacciResult_SSE, totalTime);
 }
 
 
