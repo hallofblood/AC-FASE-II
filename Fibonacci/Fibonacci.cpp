@@ -110,7 +110,7 @@ double fibonacci_SSE(int fibonacciValue) {
 			cmp ecx, 1;
 			je done; ends program when fibonacciValue equals 1
 
-				movd xmm1, ebx; move from edx to xmm1
+				movd xmm1, ebx; move from edx to xmm1 
 
 				cmp ecx, 0;
 			je done; ends program when fibonacciValue equals 0
