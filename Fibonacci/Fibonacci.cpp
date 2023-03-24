@@ -18,10 +18,11 @@ void fibonacci_C(int fibonacciValue) {
 	int currentValue;				// Stores the current value
 	int sequenceValue;				// Stores the number of Fibonacci numbers to generate
 
-	sequenceValue = fibonacciValue;
+	
 	//Bucle que realiza la serie de fibonacci
 	auto startTime = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 100000; i++) {
+		sequenceValue = fibonacciValue;
 		while (sequenceValue > 0) {
 			currentValue = nextValue;
 			nextValue = fibonacciResult_C + nextValue;
