@@ -50,20 +50,20 @@ chrono::nanoseconds fibonacci_x86(int fibonacciValue) {
 			cmp ecx, 1;
 			je done; ends program when fibonacciValue equals 1
 
-				mov eax, 0;
+			mov eax, 0;
 
 			cmp ecx, 0;
 			je done; ends program when fibonacciValue equals 0
 
-				mov ebx, 1; next fibonacciValue
+			mov ebx, 1; next fibonacciValue
 
-				loop_start :
-			add eax, ebx; F_n = F_(n - 1) + F_(n - 2)
+			loop_start :
+				add eax, ebx; F_n = F_(n - 1) + F_(n - 2)
 				xchg eax, ebx; swap currentand next Fibonacci numbers
 				loop loop_start; if not 0, loop again
 
-				done :
-			mov fibonacciResult_x86, eax; stores the Fibonacci result
+			done :
+				mov fibonacciResult_x86, eax; stores the Fibonacci result
 		}
 	}
 	auto endTime = chrono::high_resolution_clock::now();
@@ -117,17 +117,17 @@ chrono::nanoseconds fibonacci_SSE(int fibonacciValue) {
 			cmp ecx, 1;
 			je done; ends program when fibonacciValue equals 1
 
-				movd xmm1, ebx; move from ebx to xmm1 
+			movd xmm1, ebx; move from ebx to xmm1 
 
-				cmp ecx, 0;
+			cmp ecx, 0;
 			je done; ends program when fibonacciValue equals 0
 
-				//load the initial values into XMM0 and XMM1 registers
+			//load the initial values into XMM0 and XMM1 registers
 
-				movd xmm0, edx; move from edx to xmm0
+			movd xmm0, edx; move from edx to xmm0
 
-				// generate the remaining Fibonacci numbers
-				bucle :
+			// generate the remaining Fibonacci numbers
+			bucle :
 				paddw xmm0, xmm1; calculate the next Fibonacci number
 				movd ebx, xmm0; move from xmm1 to eax, to get the next value
 				movd edx, xmm1; move from xmm0 to edx, to get the current value
@@ -138,10 +138,10 @@ chrono::nanoseconds fibonacci_SSE(int fibonacciValue) {
 				cmp ecx, 0; compare counter with zero
 				jne bucle; if not zero, loop again
 
-				// Exit program
-				done :
-					movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
-					emms; clear MMX registers
+			// Exit program
+			done :
+				movd fibonacciResult_SSE, xmm1; stores the Fibonacci result
+				emms; clear MMX registers
 		}
 	}
 
