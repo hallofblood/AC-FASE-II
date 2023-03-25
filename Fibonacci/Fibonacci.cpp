@@ -2,17 +2,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <chrono>
+#include <iomanip> // necesario para setw() y setprecision()
+
 
 using namespace std;
 
-void printResults(string language, int fibonacciValue, long fibonacciResult, chrono::nanoseconds totalTime) {
-	cout << "Resultado de la serie de Fibonacci de " << fibonacciValue
-		<< " iteraciones, utilizando el benchmark creado con " << language << ":\n" << fibonacciResult << endl
-		<< "Tiempo de ejecucion (en nanosegundos): \n"
-		<< (totalTime/100000).count() << endl << endl;
+void printResults(int it, double time_C, double time_x86, double time_SSE) {
+	
+	cout << "|     " << "Prueba " << it+1 << "\t  |"<< setw(9) << time_C << "\t    |"<< setw(9) << time_x86 << "\t      |"<< setw(9) << time_SSE << "        |\n"
+		<< "|-----------------|-----------------|-----------------|-----------------|\n";
 }
 
-void fibonacci_C(int fibonacciValue) {
+chrono::nanoseconds fibonacci_C(int fibonacciValue) {
 	int fibonacciResult_C;			// Stores the resulting value from previous iteration
 	int nextValue;					// Stores the next value
 	int currentValue;				// Stores the current value
@@ -34,10 +35,11 @@ void fibonacci_C(int fibonacciValue) {
 	}
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-	printResults("C++", fibonacciValue, fibonacciResult_C, totalTime);
+	totalTime /= 100000;
+	return totalTime;
 }
 
-void fibonacci_x86(int fibonacciValue) {
+chrono::nanoseconds fibonacci_x86(int fibonacciValue) {
 	long fibonacciResult_x86;
 	auto startTime = chrono::high_resolution_clock::now();
 	for (int i = 0; i < 100000; i++) {
@@ -67,10 +69,11 @@ void fibonacci_x86(int fibonacciValue) {
 	auto endTime = chrono::high_resolution_clock::now();
 
 	auto totalTime = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime);
-	printResults("x86", fibonacciValue, fibonacciResult_x86, totalTime);
+	totalTime /= 100000;
+	return totalTime;
 }
 
-void fibonacci_SSE(int fibonacciValue) {
+chrono::nanoseconds fibonacci_SSE(int fibonacciValue) {
 	
 	/*
 	float t1 = 0, t2 = 1, nextTerm = 0;
@@ -114,14 +117,14 @@ void fibonacci_SSE(int fibonacciValue) {
 			cmp ecx, 1;
 			je done; ends program when fibonacciValue equals 1
 
-				movd xmm1, ebx; move from edx to xmm1 
+				movd xmm1, ebx; move from ebx to xmm1 
 
 				cmp ecx, 0;
 			je done; ends program when fibonacciValue equals 0
 
 				//load the initial values into XMM0 and XMM1 registers
 
-				movd xmm0, edx; move from ecx to xmm0
+				movd xmm0, edx; move from edx to xmm0
 
 				// generate the remaining Fibonacci numbers
 				bucle :
@@ -146,7 +149,8 @@ void fibonacci_SSE(int fibonacciValue) {
 	std::chrono::high_resolution_clock::time_point endTime_SSE = std::chrono::high_resolution_clock::now();
 
 	auto totalTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime_SSE - startTime_SSE);
-	printResults("SSE", fibonacciValue, fibonacciResult_SSE, totalTime);
+	totalTime /= 100000;
+	return totalTime;
 }
 
 
@@ -154,64 +158,61 @@ int main() {
 	int benchmarkOption;
 	char repeatBenchmark;
 
-	cout << "Bienvenido a la calculadora de Fibonacci.\n"
-		<< "1. Fibonacci en C++ \n"
-		<< "2. Fibonacci en x86 \n"
-		<< "3. Fibonacci en SSE \n"
-		<< "4. Las tres versiones \n"
-		<< "Seleccione una opcion: ";
-	do {
-		cin >> benchmarkOption;
+	cout << "#######################################################################\n"
+		<< "#           Benchmark reducido - Calculadora de Fibonacci             #\n"
+		<< "#######################################################################\n"
+		<< ">>Se va a ejecutar el benchmark 3 veces. A continuacion, se mostrara\n"
+		<< "una tabla con los resultados obtenidos. Espere a que termine...\n\n"
+		<< ">>Los tiempos de la tabla se expresan en nanosegundos (ns)\n\n";
 
-		if (benchmarkOption < 1 || benchmarkOption > 4) {
-			cout << "Opcion no valida, vuelve a introducirla: ";
-		}
+	int fibonacciValue = 24;
 
-	} while (benchmarkOption < 1 || benchmarkOption > 4);
-	do {
-		int fibonacciValue;
+	cout << "|#################|#################|#################|#################|\n"
+		<< "|   Num. prueba   |   Tiempo C++    |   Tiempo x86    |   Tiempo SSE    |\n"
+		<< "|#################|#################|#################|#################|\n";
 
-		cout << "Introduce cuantas iteraciones de la serie de Fibonacci quieres hacer entre [0/24]: ";
+	//Variables para almacenar los valores de los 3 tiempos y calcular una media para cada lenguaje
+	double contador_C = 0;
+	double contador_x86 = 0;
+	double contador_SSE = 0;
 
-		do {
-			cin >> fibonacciValue;
-			if (fibonacciValue < 0 || fibonacciValue > 24) {
-				cout << "Numero de iteraciones invalido, vuelve a introducirlo: ";
-			}
-		} while (fibonacciValue < 0 || fibonacciValue > 24);
+	for (int i = 0; i < 3; i++) {
+		double* time_C = new double;
+		double* time_x86 = new double;
+		double* time_SSE = new double;
 
+		*time_C = fibonacci_C(fibonacciValue).count();
+		*time_x86 = fibonacci_x86(fibonacciValue).count();
+		*time_SSE = fibonacci_SSE(fibonacciValue).count();
+		printResults(i, *time_C, *time_x86, *time_SSE);
+			
+		contador_C += *time_C;
+		contador_x86 += *time_x86;
+		contador_SSE += *time_SSE;
 
-		switch (benchmarkOption) {
-		case 1:
-			fibonacci_C(fibonacciValue);
-			break;
+		delete(time_C);
+		delete(time_x86);
+		delete(time_SSE);
 
-		case 2:
-			fibonacci_x86(fibonacciValue);
-			break;
+	}
 
-		case 3:
-			fibonacci_SSE(fibonacciValue);
-			break;
-		case 4:
-			fibonacci_C(fibonacciValue);
-			fibonacci_x86(fibonacciValue);
-			fibonacci_SSE(fibonacciValue);
-			break;
-		}
+	contador_C = contador_C / 3;
+	contador_x86 = contador_x86 / 3;
+	contador_SSE = contador_SSE / 3;
 
-		cout << "Indique si quiere probar con otro valor (s/n): ";
+	cout << "|#################|#################|#################|#################|\n"
+		<< "|     " << "Media" << "\t  |"
+		<< setw(10) << contador_C << "       |"
+		<< setw(10) << contador_x86 << "       |"
+		<< setw(10) << contador_SSE << "       |\n"
+		<< "|-----------------|-----------------|-----------------|-----------------|\n\n";
+	
+	cout << ">>En cada prueba para cada lenguaje se realiza 100.000 veces fibonacci y\n"
+		<< "se divide el resultado entre 100.000 para mayor precision\n\n"
+		<< "Pulse ENTER para cerrar\n"
+		<< "> ";
 
-		do {
-			cin >> repeatBenchmark;
-
-			if (repeatBenchmark != 's' && repeatBenchmark != 'n') {
-				cout << "Opcion no valida, vuelve a introducirla: ";
-			}
-
-		} while (repeatBenchmark != 's' && repeatBenchmark != 'n');
-
-	} while (repeatBenchmark != 'n');
+	int fin = getchar(); //se guarda el valor en fin para evitar el warning "se ignora el valor devuelto"
 
 	return 0;
 }
