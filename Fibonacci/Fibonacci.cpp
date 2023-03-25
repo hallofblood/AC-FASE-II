@@ -209,6 +209,8 @@ int main() {
 	
 	cout << ">>En cada prueba para cada lenguaje se realiza 100.000 veces fibonacci y\n"
 		<< "se divide el resultado entre 100.000 para mayor precision\n\n"
+		<< "Byte Bandits - Arquitectura de los Computadores - Universidad de Alicante\n"
+		<< "Curso 2022/23\n\n"
 		<< "Pulse ENTER para cerrar\n"
 		<< "> ";
 
