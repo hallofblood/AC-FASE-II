@@ -2,12 +2,14 @@
 #include <ctime>
 #include <chrono>
 using namespace std;
+
+//Vamos a ver que hace si lo edito.
 int main() {
 	char opcion;
 	do {
 		int iteracionActual = 0;		//Almacena el valor en la primera iteracion con el valor anterior
 		int siguiente = 1;				//Almacena el valor de la siguiente operacion de sumar los valores n + (n-1)
-		int aux;					//Auxiliar para intercambiar los valores de iteración actual y siguiente
+		int aux;					//Auxiliar para intercambiar los valores de iteraciï¿½n actual y siguiente
 		int iteraciones;		//Iteraciones a realizar
 		int numIteraciones;
 
